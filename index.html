@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function ()
+        {
+            var oBtn = document.getElementById("btn");
+            oBtn.onclick = function ()
+            {
+                var opener = window.open();
+                opener.document.write("QQ号码：985661951");
+                opener.document.body.style.backgroundColor = "lightskyblue";
+            };
+            var oBtm = document.getElementById("btm");
+            oBtm.onclick = function ()
+            {
+                var opener = window.open();
+                opener.document.write("上课地点1304，上课时间：上午9点到11点");
+                opener.document.body.style.backgroundColor = "lightskyblue";
+            };
+            var ame = document.getElementById("name");
+            ame.onclick = function ()
+            {
+                var opener = window.open();
+                opener.document.write("本网站由负责人室友建设，搭建在GitHub上，如果有关于网站的建议或想法，请联系我。QQ：2900076380");
+                opener.document.body.style.backgroundColor = "lightskyblue";
+            };
+        }
+    </script>
+    <style type="text/css">
+        body,ul
+        {
+            margin: 0px;
+            padding: 0px;
+        }
+        ul
+        {
+            list-style: none;
+        }
+        a
+        {
+            text-decoration:none ;
+        }
+        .clearfix::after
+        {
+            content:'';
+            display: block;
+            clear: both;
+        }
+        .menu
+        {
+            width: 100%;
+            height: 60px;
+            background-color: indianred;
+        }
+        .menu-con
+        {
+            width: 1000px;
+            height: 60px;
+            margin: 0px auto;
+        }
+        .menu .menu-con ul li
+        {
+            height: 60px;
+            float: left;
+            position: relative;
+        }
+        .menu .menu-con ul li a
+        {
+            height: 60px;
+            display: block;
+            padding: 0px 30px;
+            line-height: 60px;
+            color: #fff;
+        }
+        .menu .menu-con ul li:hover
+        {
+            background-color: orangered;
+        }
+        .menu .menu-con ul li div
+        {
+            width: 300px;
+            background-color: indianred;
+            position: absolute;
+            left: 50%;
+            margin-left: -150px;
+            top: 60px;
+            display: none;
+        }
+        .menu .menu-con ul li div a
+        {
+            height: 50px;
+            line-height: 50px;
+            padding: 0px;
+            text-align: center;
+            font-size: 15px;
+        }
+        .menu .menu-con ul li div a:hover
+        {
+            background-color: orangered;
+        }
+        .menu .menu-con ul li:hover div
+        {
+            display: block;
+        }
+        .a
+        {
+            width: 100%;
+            height: 973px;
+            background-image: url("preview.jpg");
+            background-repeat:no-repeat;
+            background-size: 100% 1000px;
+        }
+        .b
+        {
+            color: white;
+            text-align: center;
+            font-size: 50px;
+            font-family: "华文琥珀";
+        }
+        #dateTime
+        {
+            text-align: center;
+            color: purple;
+            font-size: 100px;
+            margin-top: 50px;
+            font-family: "楷体";
+        }
+    </style>
+</head>
+<body>
+<script>
+    function clickEffect() {
+        let balls = [];
+        let longPressed = false;
+        let longPress;
+        let multiplier = 0;
+        let width, height;
+        let origin;
+        let normal;
+        let ctx;
+        const colours = ["#F73859", "#14FFEC", "#00E0FF", "#FF99FE", "#FAF15D"];
+        const canvas = document.createElement("canvas");
+        document.body.appendChild(canvas);
+        canvas.setAttribute("style", "width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;");
+        const pointer = document.createElement("span");
+        pointer.classList.add("pointer");
+        document.body.appendChild(pointer);
+
+        if (canvas.getContext && window.addEventListener) {
+            ctx = canvas.getContext("2d");
+            updateSize();
+            window.addEventListener('resize', updateSize, false);
+            loop();
+            window.addEventListener("mousedown", function(e) {
+                pushBalls(randBetween(10, 20), e.clientX, e.clientY);
+                document.body.classList.add("is-pressed");
+                longPress = setTimeout(function() {
+                    document.body.classList.add("is-longpress");
+                    longPressed = true;
+                }, 500);
+            }, false);
+            window.addEventListener("mouseup", function(e) {
+                clearInterval(longPress);
+                if (longPressed == true) {
+                    document.body.classList.remove("is-longpress");
+                    pushBalls(randBetween(50 + Math.ceil(multiplier), 100 + Math.ceil(multiplier)), e.clientX, e.clientY);
+                    longPressed = false;
+                }
+                document.body.classList.remove("is-pressed");
+            }, false);
+            window.addEventListener("mousemove", function(e) {
+                let x = e.clientX;
+                let y = e.clientY;
+                pointer.style.top = y + "px";
+                pointer.style.left = x + "px";
+            }, false);
+        } else {
+            console.log("canvas or addEventListener is unsupported!");
+        }
+
+
+        function updateSize() {
+            canvas.width = window.innerWidth * 2;
+            canvas.height = window.innerHeight * 2;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            ctx.scale(2, 2);
+            width = (canvas.width = window.innerWidth);
+            height = (canvas.height = window.innerHeight);
+            origin = {
+                x: width / 2,
+                y: height / 2
+            };
+            normal = {
+                x: width / 2,
+                y: height / 2
+            };
+        }
+        class Ball {
+            constructor(x = origin.x, y = origin.y) {
+                this.x = x;
+                this.y = y;
+                this.angle = Math.PI * 2 * Math.random();
+                if (longPressed == true) {
+                    this.multiplier = randBetween(14 + multiplier, 15 + multiplier);
+                } else {
+                    this.multiplier = randBetween(6, 12);
+                }
+                this.vx = (this.multiplier + Math.random() * 0.5) * Math.cos(this.angle);
+                this.vy = (this.multiplier + Math.random() * 0.5) * Math.sin(this.angle);
+                this.r = randBetween(8, 12) + 3 * Math.random();
+                this.color = colours[Math.floor(Math.random() * colours.length)];
+            }
+            update() {
+                this.x += this.vx - normal.x;
+                this.y += this.vy - normal.y;
+                normal.x = -2 / window.innerWidth * Math.sin(this.angle);
+                normal.y = -2 / window.innerHeight * Math.cos(this.angle);
+                this.r -= 0.3;
+                this.vx *= 0.9;
+                this.vy *= 0.9;
+            }
+        }
+
+        function pushBalls(count = 1, x = origin.x, y = origin.y) {
+            for (let i = 0; i < count; i++) {
+                balls.push(new Ball(x, y));
+            }
+        }
+
+        function randBetween(min, max) {
+            return Math.floor(Math.random() * max) + min;
+        }
+
+        function loop() {
+            ctx.fillStyle = "rgba(255, 255, 255, 0)";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < balls.length; i++) {
+                let b = balls[i];
+                if (b.r < 0) continue;
+                ctx.fillStyle = b.color;
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2, false);
+                ctx.fill();
+                b.update();
+            }
+            if (longPressed == true) {
+                multiplier += 0.2;
+            } else if (!longPressed && multiplier >= 0) {
+                multiplier -= 0.4;
+            }
+            removeBall();
+            requestAnimationFrame(loop);
+        }
+
+        function removeBall() {
+            for (let i = 0; i < balls.length; i++) {
+                let b = balls[i];
+                if (b.x + b.r < 0 || b.x - b.r > width || b.y + b.r < 0 || b.y - b.r > height || b.r < 0) {
+                    balls.splice(i, 1);
+                }
+            }
+        }
+    }
+    clickEffect();
+</script>
+<div class="menu">
+    <div class="menu-con">
+        <ul class="clearfix">
+            </li>
+            <li> <a href="#">PWN环境搭建</a>
+                <div>
+                    <a href="https://blog.csdn.net/qq_41202237/article/details/118188924">ubuntu环境搭建</a>
+                </div>
+            </li>
+            <li> <a href="#">消息公告</a>
+                <div>
+                    <a href="" id="btm">上课地点及时间</a>
+                </div>
+            </li>
+            <li> <a href="#">基础书籍</a>
+                <div>
+                    <a href="">《汇编语言(第3版) 》王爽著</a>
+                    <a href="">0day安全：软件漏洞分析技术</a>
+                    <a href="">漏洞战争：软件漏洞分析精要</a>
+                </div>
+            </li>
+            <li> <a href="#" >参考类书籍</a>
+                <div>
+                    <a href="">IDA Pro权威指南 第2版 </a>
+                    <a href="">C Primer Plus 第六版 </a>
+                    <a href="">从零开始学Python程序设计</a>
+                </div>
+            </li>
+            <li> <a href="#">常用网站地址</a>
+                <div>
+                    <a href="https://www.ruanyifeng.com/blog/2015/04/tail-call.html" target="_blank">尾调用优化</a>
+                    <a href="https://zhuanlan.zhihu.com/p/419908664" target="_blank">DWARF, 调试信息存储格式</a>
+                    <a href="https://baike.baidu.com/item/argc%20argv/10826112?fr=aladdin" target="_blank">argc argv</a>
+                    <a href="https://www.cnblogs.com/tcctw/p/11333743.html" target="_blank">Linux运行时栈的字节对齐</a>
+                    <a href="https://www.cnblogs.com/murkuo/category/1985639.html" target="_blank">PWN知识点</a>
+                    <a href="https://www.cnblogs.com/murkuo/p/15965270.html" target="_blank">pwndbg 基本操作指令</a>
+                    <a href="https://blog.csdn.net/zl10086111/article/details/80907428" target="_blank">原码、反码、补码知识讲解</a>
+                    <a href="https://bbs.pediy.com/thread-257238.htm" target="_blank">rop链攻击原理与思路</a>
+                    <a href="https://bbs.pediy.com/thread-250858.htm" target="_blank">printf格式化字符串漏洞原理与利用</a>
+                    <a href="https://www.cnblogs.com/unr4v31/p/15173811.html" target="_blank">one_gadget的一些姿势</a>
+                    <a href="https://bbs.pediy.com/forum-171-1-181.htm" target="_blank">看雪论坛</a>
+                    <a href="https://www.cnblogs.com/ZIKH26/articles/15855666.html" target="_blank">探究pwntools中sendline回车所造成的影响</a>
+                    <a href="https://new.qq.com/rain/a/20211226A001Q700" target="_blank">沙盒逃逸之seccomp学习</a>
+                    <a href="https://www.cnblogs.com/L0g4n-blog/p/12839171.html" target="_blank">从prctl函数开始学习沙箱规则</a>
+                    <a href="https://blog.csdn.net/Crazy_Tengt/article/details/72717144" target="_blank">详解C语言中的stdin，stdout，stderr</a>
+                    <a href="https://blog.csdn.net/night_crow/article/details/93140115" target="_blank">内存管理解析(1) 内存映射与堆内存管理</a>
+                    <a href="https://www.cnblogs.com/L0g4n-blog/p/12887869.html" target="_blank">PWN——uaf漏洞</a>
+                    <a href="https://blog.csdn.net/daocaokafei/article/details/121551201" target="_blank">linux内核内存虚拟地址映射物理地址</a>
+                    <a href="https://azeria-labs.com/heap-exploitation-part-1-understanding-the-glibc-heap-implementation/" target="_blank">Arm Heap Exploitation</a>
+                </div>
+            </li>
+            <li> <a href="#">联系负责人</a>
+                <div>
+                    <a href="" id="btn">QQ</a>
+                    <a href="" id="name">关于网站</a>
+                </div>
+            </li>
+            <li> <a href="#">菜就多练</a>
+                <div>
+                    <a href="https://buuoj.cn/" target="_blank">BUUCTF在线评测</a>
+                    <a href="https://adworld.xctf.org.cn/challenges/list" target="_blank">攻防世界</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="a">
+    <div class="b">二进制方向训练基地</div>
+    <script>
+        Date.prototype.format = function (fmt) {
+            var o = {
+                "y+": this.getFullYear, //年
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds() //秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        setInterval("document.getElementById('dateTime').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss');", 1000);
+    </script>
+    <div id="dateTime"></div>
+</div>
+</body>
+</html>
